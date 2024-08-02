@@ -14,12 +14,10 @@ const InitialLayout = () => {
 const RootLayoutNav = () => {
   return (
     <ActionSheetProvider>
-      <>
-        <GestureHandlerRootView style={{ flex: 1 }}>
-          <StatusBar style="light" />
-          <InitialLayout />
-        </GestureHandlerRootView>
-      </>
+      <GestureHandlerRootView style={{ flex: 1 }}>
+        <StatusBar style="light" />
+        <InitialLayout />
+      </GestureHandlerRootView>
     </ActionSheetProvider>
   );
 };

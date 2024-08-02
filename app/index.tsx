@@ -1,56 +1,26 @@
 import React, { useRef, useState, useMemo, useCallback } from "react";
-import { Colors } from "@/constants/Colors";
-import { ModalType } from "@/types/enums";
 import { Text, View, StyleSheet, Image, Dimensions } from "react-native";
-import { TouchableOpacity } from "react-native-gesture-handler";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import * as WebBrowser from "expo-web-browser";
 import { useActionSheet } from "@expo/react-native-action-sheet";
+import { TouchableOpacity } from "react-native-gesture-handler";
+import * as WebBrowser from "expo-web-browser";
 import {
   BottomSheetModal,
   BottomSheetModalProvider,
   BottomSheetBackdrop,
 } from "@gorhom/bottom-sheet";
+
 import AuthModal from "@/components/AuthModal";
+import { Colors } from "@/constants/Colors";
+import { ModalType } from "@/types/enums";
 
 export default function Index() {
-  //expo react-native-safe-area-context statusBar height alımı
+  // Safe area insets
   const { top } = useSafeAreaInsets();
-  //expo react-native-dimensions ile ekran width alımı
-  const { width } = Dimensions.get("window");
-  //expo react-native-action-sheet ile action sheet kullanımı
+
+  // Action sheet
   const { showActionSheetWithOptions } = useActionSheet();
 
-  const bottomSheetModalRef = useRef<BottomSheetModal>(null);
-
-  const snapPoints = useMemo(() => ["33%"], []);
-  const [authType, setAuthType] = useState<ModalType | null>(null);
-
-  //expo react-native-modal ile modal kullanımı
-  const showModal = async (type: ModalType) => {
-    setAuthType(type);
-    bottomSheetModalRef.current?.present();
-  };
-
-  const renderBackdrop = useCallback(
-    (props: any) => (
-      <BottomSheetBackdrop
-        opacity={0.2}
-        appearsIndex={0}
-        disappearsIndex={-1}
-        {...props}
-        onPress={() => bottomSheetModalRef.current?.close()}
-      />
-    ),
-    []
-  );
-
-  //expo web-browser ile web browser
-  const openLink = () => {
-    WebBrowser.openBrowserAsync("https://google.com");
-  };
-
-  //expo react-native-action-sheet ile action sheet kullanımı
   const openActionSheet = async () => {
     const options = [
       "Destek dökümanlarını görüntüleyin",
@@ -62,12 +32,43 @@ export default function Index() {
       {
         options,
         cancelButtonIndex,
-        title: "Giriş yapamıyor ya da oturum açamıyor musunuz?",
+        title: "Giriş yapamıyor musunuz?",
       },
       (selectedIndex: any) => {
         console.log(selectedIndex);
       }
     );
+  };
+
+  // Bottom sheet modal
+  const bottomSheetModalRef = useRef<BottomSheetModal>(null);
+
+  // Modal type state
+  const [authType, setAuthType] = useState<ModalType | null>(null);
+
+  const showModal = async (type: ModalType) => {
+    setAuthType(type);
+    bottomSheetModalRef.current?.present();
+  };
+
+  const snapPoints = useMemo(() => ["33%"], []);
+
+  const renderBackdrop = useCallback(
+    (props: any) => (
+      <BottomSheetBackdrop
+        opacity={0.2}
+        appearsOnIndex={0}
+        disappearsOnIndex={-1}
+        {...props}
+        onPress={() => bottomSheetModalRef.current?.close()}
+      />
+    ),
+    []
+  );
+
+  // Open link
+  const openLink = () => {
+    WebBrowser.openBrowserAsync("https://google.com");
   };
 
   return (
@@ -111,7 +112,7 @@ export default function Index() {
               style={[styles.link, { marginTop: "4%" }]}
               onPress={openActionSheet}
             >
-              Giriş yapamıyor ya da oturum açamıyor musunuz?
+              Giriş yapamıyor musun?
             </Text>
           </View>
         </View>
@@ -122,7 +123,7 @@ export default function Index() {
         snapPoints={snapPoints}
         handleComponent={null}
         backdropComponent={renderBackdrop}
-        enableOverDrag={false}
+        enableOverDrag={true}
         enablePanDownToClose
       >
         <AuthModal authType={authType} />
