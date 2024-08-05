@@ -15,12 +15,14 @@
     "preset": "jest-expo"
   },
   "dependencies": {
-    "@clerk/clerk-expo": "^2.0.0",
+    "@clerk/clerk-expo": "^2.0.2",
+    "@expo/metro-runtime": "~3.2.1",
     "@expo/react-native-action-sheet": "^4.1.0",
     "@expo/vector-icons": "^14.0.2",
     "@gorhom/bottom-sheet": "^4.6.4",
     "@react-navigation/native": "^6.0.2",
     "@supabase/supabase-js": "^2.45.0",
+    "base64-arraybuffer": "^1.0.2",
     "expo": "~51.0.24",
     "expo-constants": "~16.0.2",
     "expo-dev-client": "~4.0.21",

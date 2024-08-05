@@ -3,10 +3,13 @@ export enum ModalType {
   SignUp = "signup",
 }
 
+export interface AuthModalProps {
+  authType: ModalType | null;
+}
+
 export enum AuthStrategy {
   Google = "oauth_google",
   Microsoft = "oauth_microsoft",
-  Slack = "oauth_slack",
   Apple = "oauth_apple",
 }
 

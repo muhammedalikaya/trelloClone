@@ -13,6 +13,7 @@ import {
 import AuthModal from "@/components/AuthModal";
 import { Colors } from "@/constants/Colors";
 import { ModalType } from "@/types/enums";
+import { useSupabase } from "@/context/SupabaseContext";
 
 export default function Index() {
   // Safe area insets
@@ -22,22 +23,23 @@ export default function Index() {
   const { showActionSheetWithOptions } = useActionSheet();
 
   const openActionSheet = async () => {
-    const options = [
-      "Destek dökümanlarını görüntüleyin",
-      "Destek ekibiyle iletişim kurun",
-      "İptal",
-    ];
-    const cancelButtonIndex = 2;
-    showActionSheetWithOptions(
-      {
-        options,
-        cancelButtonIndex,
-        title: "Giriş yapamıyor musunuz?",
-      },
-      (selectedIndex: any) => {
-        console.log(selectedIndex);
-      }
-    );
+    const data = await getBoards!();
+    // const options = [
+    //   "Destek dökümanlarını görüntüleyin",
+    //   "Destek ekibiyle iletişim kurun",
+    //   "İptal",
+    // ];
+    // const cancelButtonIndex = 2;
+    // showActionSheetWithOptions(
+    //   {
+    //     options,
+    //     cancelButtonIndex,
+    //     title: "Giriş yapamıyor musunuz?",
+    //   },
+    //   (selectedIndex: any) => {
+    //     console.log(selectedIndex);
+    //   }
+    // );
   };
 
   // Bottom sheet modal
@@ -46,17 +48,19 @@ export default function Index() {
   // Modal type state
   const [authType, setAuthType] = useState<ModalType | null>(null);
 
+  const { getBoards } = useSupabase();
+
   const showModal = async (type: ModalType) => {
     setAuthType(type);
     bottomSheetModalRef.current?.present();
   };
 
-  const snapPoints = useMemo(() => ["33%"], []);
+  const snapPoints = useMemo(() => ["40%"], []);
 
   const renderBackdrop = useCallback(
     (props: any) => (
       <BottomSheetBackdrop
-        opacity={0.2}
+        opacity={0.4}
         appearsOnIndex={0}
         disappearsOnIndex={-1}
         {...props}
@@ -87,7 +91,7 @@ export default function Index() {
             onPress={() => showModal(ModalType.Login)}
           >
             <Text style={[styles.btnText, { color: Colors.primary }]}>
-              Oturum Aç
+              Giriş Yap
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
@@ -121,7 +125,7 @@ export default function Index() {
         ref={bottomSheetModalRef}
         index={0}
         snapPoints={snapPoints}
-        handleComponent={null}
+        handleComponent={() => <View style={styles.handle} />}
         backdropComponent={renderBackdrop}
         enableOverDrag={true}
         enablePanDownToClose
@@ -181,5 +185,24 @@ const styles = StyleSheet.create({
   descriptionContainer: {
     width: "100%",
     alignItems: "center",
+  },
+  // Yeni stiller
+  modalContent: {
+    backgroundColor: "#fff",
+    borderRadius: 16,
+    padding: 20,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  handle: {
+    height: 5,
+    width: 40,
+    backgroundColor: "#ccc",
+    borderRadius: 2.5,
+    alignSelf: "center",
+    marginVertical: 10,
   },
 });
