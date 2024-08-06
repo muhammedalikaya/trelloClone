@@ -1,13 +1,15 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { StatusBar } from "expo-status-bar";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 
-import { Stack } from "expo-router";
+import { Href, Stack, useRouter, useSegments } from "expo-router";
 import { ActionSheetProvider } from "@expo/react-native-action-sheet";
 
-import { ClerkProvider, ClerkLoaded } from "@clerk/clerk-expo";
+import { ClerkProvider, ClerkLoaded, useAuth } from "@clerk/clerk-expo";
 import * as SecureStore from "expo-secure-store";
 import { SupabaseProvider } from "@/context/SupabaseContext";
+import { Colors } from "@/constants/Colors";
+import { ActivityIndicator, View } from "react-native";
 
 // kullanicinin jwt tokenini saklamak icin kullanilan cache
 const tokenCache = {
@@ -38,10 +40,36 @@ const tokenCache = {
 const publishableKey = process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY! as string;
 
 const InitialLayout = () => {
+  const router = useRouter();
+  const { isLoaded, isSignedIn } = useAuth();
+  type SegmentType = "" | "(authenticated)" | string;
+  const segments: SegmentType[] = useSegments();
+
+  useEffect(() => {
+    if (!isLoaded) return;
+
+    const inAuthGroup = segments[0] === "(authenticated)";
+
+    if (isSignedIn && !inAuthGroup) {
+      router.replace("/(authenticated)/(tabs)/boards" as Href<string>);
+    } else if (!isSignedIn) {
+      router.replace("/");
+    }
+  }, [isSignedIn]);
+
+  if (!isLoaded) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <ActivityIndicator size="large" color={Colors.primary} />
+      </View>
+    );
+  }
+
   return (
     <SupabaseProvider>
       <Stack>
         <Stack.Screen name="index" options={{ headerShown: false }} />
+        <Stack.Screen name="(authenticated)" options={{ headerShown: false }} />
       </Stack>
     </SupabaseProvider>
   );
