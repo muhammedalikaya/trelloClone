@@ -16,11 +16,11 @@ const tokenCache = {
   async getToken(key: string) {
     try {
       const clerkToken = await SecureStore.getItemAsync(key);
-      if (clerkToken) {
-        console.log("clerkToken : ", clerkToken);
-      } else {
-        console.log("No values stored under key: " + key);
-      }
+      // if (clerkToken) {
+      //   console.log("clerkToken : ", clerkToken);
+      // } else {
+      //   console.log("No values stored under key: " + key);
+      // }
       return clerkToken;
     } catch (error) {
       console.error("SecureStore get item error: ", error);
@@ -42,8 +42,8 @@ const publishableKey = process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY! as string;
 const InitialLayout = () => {
   const router = useRouter();
   const { isLoaded, isSignedIn } = useAuth();
-  type SegmentType = "" | "(authenticated)" | string;
-  const segments: SegmentType[] = useSegments();
+
+  const segments = useSegments();
 
   useEffect(() => {
     if (!isLoaded) return;
