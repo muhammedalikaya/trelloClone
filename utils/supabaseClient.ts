@@ -19,7 +19,8 @@ function createClerkSupabaseClient() {
     global: {
       // Get the custom Supabase token from Clerk
       fetch: async (url, options = {}) => {
-        console.log("supabase client initialized");
+        // database'e her request'te token eklemek için
+        // console.log("supabase client initialized");
         const clerkToken = await window.Clerk?.session?.getToken({
           template: "supabase",
         });

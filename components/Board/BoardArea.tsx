@@ -74,11 +74,14 @@ const BoardArea = ({ board }: BoardAreaProps) => {
         renderItem={({ index, item }: any) => (
           <>
             {item.id && (
-              <ListView
-                key={index}
-                taskList={item}
-                onDelete={() => onListDeleted(item.id)}
-              />
+              <>
+                <ListView
+                  key={index}
+                  taskList={item}
+                  onDelete={() => onListDeleted(item.id)}
+                />
+                <Text>{item.id}</Text>
+              </>
             )}
             {item.id === undefined && (
               <View
