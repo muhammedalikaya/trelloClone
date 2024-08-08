@@ -3,15 +3,20 @@ import React, { useState } from "react";
 import { DEFAULT_COLOR, COLORS } from "@/types/enums";
 
 import { Colors } from "@/constants/Colors";
-import { Href, useRouter } from "expo-router";
+import { Href, useGlobalSearchParams, useRouter } from "expo-router";
 
 const Page = () => {
-  const [selected, setSelected] = useState(DEFAULT_COLOR);
   const router = useRouter();
+
+  const [selected, setSelected] = useState(DEFAULT_COLOR);
 
   const onColorSelect = (color: string) => {
     router.setParams({ bg: color });
+    setTimeout(() => {
+      router.back();
+    }, 0);
   };
+
   return (
     <View
       style={{

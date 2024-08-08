@@ -17,19 +17,25 @@ import {
 import { Colors } from "@/constants/Colors";
 import { Ionicons } from "@expo/vector-icons";
 import { DEFAULT_COLOR } from "@/types/enums";
+import { useSupabase } from "@/context/SupabaseContext";
 
 const Page = () => {
+  const { createBoard } = useSupabase();
   const [boardName, setBoardName] = useState("");
   const [selectedColor, setSelectedColor] = useState(DEFAULT_COLOR);
   const { bg } = useGlobalSearchParams<{ bg?: string }>();
   const router = useRouter();
 
-  const onCreateBoard = async () => {};
+  const onCreateBoard = async () => {
+    await createBoard!(boardName, selectedColor);
+    router.dismiss();
+    router.back;
+  };
 
   useEffect(() => {
-    console.log("BG changed:", bg);
     if (bg) {
       setSelectedColor(bg);
+      console.log(selectedColor);
     }
   }, [bg]);
 
