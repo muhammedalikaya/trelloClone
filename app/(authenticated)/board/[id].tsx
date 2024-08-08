@@ -1,6 +1,12 @@
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import React, { useEffect, useState } from "react";
-import { Link, Stack, useLocalSearchParams, useRouter } from "expo-router";
+import {
+  Href,
+  Link,
+  Stack,
+  useLocalSearchParams,
+  useRouter,
+} from "expo-router";
 import { useSupabase } from "@/context/SupabaseContext";
 import { Board } from "@/types/enums";
 import { BlurView } from "expo-blur";
@@ -10,6 +16,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { Colors } from "@/constants/Colors";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import BoardArea from "@/components/Board/BoardArea";
+
 const Page = () => {
   const { id, bg } = useLocalSearchParams<{ id: string; bg: string }>();
   const { getBoardInfo } = useSupabase();
@@ -26,7 +33,7 @@ const Page = () => {
   const loadBoardInfo = async () => {
     const data = await getBoardInfo!(id!);
     setBoard(data);
-    console.log("data:", data);
+    // console.log("data:", data);
   };
   const CustomHeader = () => {
     return (
@@ -50,7 +57,10 @@ const Page = () => {
             <TouchableOpacity onPress={() => {}}>
               <Ionicons name="notifications-outline" size={26} color="white" />
             </TouchableOpacity>
-            <Link href={""} asChild>
+            <Link
+              href={`/(authenticated)/board/settings?id=${id}` as Href}
+              asChild
+            >
               <TouchableOpacity onPress={() => {}}>
                 <MaterialCommunityIcons
                   name="dots-horizontal"

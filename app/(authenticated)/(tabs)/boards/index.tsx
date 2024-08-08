@@ -28,7 +28,7 @@ const Boards = () => {
   const loadBoards = async () => {
     const data = await getBoards!();
     setBoards(data);
-    console.log("data:", data);
+    // console.log("data:", data);
   };
   const renderItem: ListRenderItem<Board> = ({ item }) => (
     <Link
