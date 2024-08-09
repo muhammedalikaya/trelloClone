@@ -6,10 +6,16 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import React, { useCallback, useMemo, useRef, useState } from "react";
-import { TaskList } from "@/types/enums";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
+import { Task, TaskList } from "@/types/enums";
 import { Colors } from "@/constants/Colors";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import {
   BottomSheetBackdrop,
   BottomSheetModal,
@@ -17,7 +23,11 @@ import {
 } from "@gorhom/bottom-sheet";
 import { DefaultTheme } from "@react-navigation/native";
 import { useSupabase } from "@/context/SupabaseContext";
-
+import DragableFlatList, {
+  DragEndParams,
+} from "react-native-draggable-flatlist";
+import * as Haptics from "expo-haptics";
+import ListItem from "./ListItem";
 export interface ListViewProps {
   taskList: TaskList;
   onDelete: () => void;
@@ -26,7 +36,43 @@ const ListView = ({ taskList, onDelete }: ListViewProps) => {
   const [listName, setListName] = useState<string>(taskList.title);
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
   const snapPoints = useMemo(() => ["40%"], []);
-  const { updateBoardList, deleteBoardList } = useSupabase();
+  const {
+    updateBoardList,
+    deleteBoardList,
+    getListCards,
+    addListCard,
+    updateCard,
+  } = useSupabase();
+
+  const [tasks, setTasks] = useState<Task[]>([]);
+  const [newTask, setNewTask] = useState<string>("");
+  const [isAdding, setIsAdding] = useState<boolean>(false);
+
+  useEffect(() => {
+    loadListTasks();
+  }, []);
+
+  const loadListTasks = async () => {
+    const listTasks = await getListCards!(taskList.id);
+    // console.log(listTasks);
+    setTasks(listTasks);
+  };
+
+  const onAddCard = async () => {
+    const addCard = await addListCard!(
+      taskList.id,
+      taskList.board_id,
+      newTask,
+      tasks.length
+    );
+    setIsAdding(false);
+    setNewTask("");
+    setTasks([...tasks, addCard]);
+    // console.log(tasks);
+    // console.log(addCard);
+    // loadListTasks();
+  };
+
   const renderBackdrop = useCallback(
     (props: any) => (
       <BottomSheetBackdrop
@@ -41,13 +87,25 @@ const ListView = ({ taskList, onDelete }: ListViewProps) => {
   );
 
   const onUpdateTaskList = async () => {
-    const updated = await updateBoardList!(taskList, listName);
-    console.log(updated);
+    await updateBoardList!(taskList, listName);
   };
   const onDeleteList = async () => {
     onDelete();
     await deleteBoardList!(taskList.id);
     bottomSheetModalRef.current?.close();
+  };
+
+  const onTaskDropped = async (params: DragEndParams<Task>) => {
+    const updatedTasks = params.data.map((task, index) => {
+      return {
+        ...task,
+        position: index,
+      };
+    });
+    setTasks(updatedTasks);
+    updatedTasks.forEach(async (item) => {
+      await updateCard!(item);
+    });
   };
   return (
     <BottomSheetModalProvider>
@@ -64,6 +122,81 @@ const ListView = ({ taskList, onDelete }: ListViewProps) => {
                 color={Colors.grey}
               />
             </TouchableOpacity>
+          </View>
+          <DragableFlatList
+            data={tasks}
+            renderItem={ListItem}
+            keyExtractor={(item) => item.id}
+            onDragEnd={onTaskDropped}
+            onDragBegin={() =>
+              Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
+            }
+            containerStyle={{ maxHeight: 200, paddingBottom: 4 }}
+            contentContainerStyle={{ gap: 4 }}
+          />
+          {isAdding && (
+            <TextInput
+              autoFocus
+              style={styles.input}
+              placeholder="Enter a title for this card..."
+              onChangeText={setNewTask}
+              value={newTask}
+              returnKeyType="done"
+              onSubmitEditing={onAddCard}
+            />
+          )}
+
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "space-between",
+              paddingHorizontal: 8,
+              marginVertical: 8,
+            }}
+          >
+            {!isAdding && (
+              <>
+                <TouchableOpacity
+                  onPress={() => setIsAdding(true)}
+                  style={{ flexDirection: "row", alignItems: "center" }}
+                >
+                  <Ionicons name="add" size={18} color={Colors.grey} />
+                  <Text style={{ fontSize: 12 }}>Add card</Text>
+                </TouchableOpacity>
+                <TouchableOpacity>
+                  <Ionicons
+                    name="image-outline"
+                    size={20}
+                    color={Colors.grey}
+                  />
+                </TouchableOpacity>
+              </>
+            )}
+            {isAdding && (
+              <>
+                <TouchableOpacity
+                  onPress={() => {
+                    setIsAdding(false);
+                    setNewTask("");
+                  }}
+                >
+                  <Text style={{ fontSize: 14, color: Colors.primary }}>
+                    Cancel
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={onAddCard}>
+                  <Text
+                    style={{
+                      fontSize: 14,
+                      color: Colors.primary,
+                      fontWeight: "bold",
+                    }}
+                  >
+                    Add
+                  </Text>
+                </TouchableOpacity>
+              </>
+            )}
           </View>
         </View>
       </View>
