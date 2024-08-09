@@ -195,7 +195,6 @@ export const SupabaseProvider = ({ children }: any) => {
         title: task.title,
         description: task.description,
         done: task.done,
-        position: task.position,
       })
       .match({ id: task.id });
   };
