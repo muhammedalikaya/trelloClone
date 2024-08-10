@@ -14,14 +14,18 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.muhammedalikaya.trelloClone"
+      "bundleIdentifier": "com.muhammedalikaya.trelloClone",
+      "entitlements": {
+        "aps-environment": "development"
+      }
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.muhammedalikaya.trelloClone"
+      "package": "com.muhammedalikaya.trelloClone",
+      "permissions": ["android.permission.RECORD_AUDIO"]
     },
     "web": {
       "bundler": "metro",
@@ -42,6 +46,15 @@
     ],
     "experiments": {
       "typedRoutes": true
-    }
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "8d432ebc-e5c2-413f-9e38-5155f8df2c78"
+      }
+    },
+    "owner": "muhammedalikaya"
   }
 }
