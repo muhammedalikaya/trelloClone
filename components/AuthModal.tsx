@@ -7,6 +7,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { Colors } from "@/constants/Colors";
 import { useSignUp, useSignIn, useOAuth, useAuth } from "@clerk/clerk-expo";
 import useWarmUpBrowser from "@/hooks/useWarmUpBrowser";
+import { useRouter } from "expo-router";
 
 // Define a constant array for authentication options
 const LOGIN_OPTIONS = [
@@ -30,6 +31,7 @@ WebBrowser.maybeCompleteAuthSession();
 const AuthModal = ({ authType }: AuthModalProps) => {
   const { isSignedIn } = useAuth();
   useWarmUpBrowser();
+  const router = useRouter();
 
   const { signUp, setActive } = useSignUp();
   const { signIn } = useSignIn();
@@ -91,11 +93,11 @@ const AuthModal = ({ authType }: AuthModalProps) => {
       try {
         // Start the selected OAuth flow
         const { createdSessionId, setActive } = await selectedAuth();
-        console.log("OAuth flow started: ", createdSessionId);
+        // console.log("OAuth flow started: ", createdSessionId);
         // If a new session ID is created, set it as the active session
         if (createdSessionId) {
           setActive!({ session: createdSessionId });
-          console.log("Session created: ", createdSessionId);
+          // console.log("Session created: ", createdSessionId);
         }
       } catch (error) {
         console.error("Auth error: ", error);
@@ -106,7 +108,14 @@ const AuthModal = ({ authType }: AuthModalProps) => {
   return (
     <BottomSheetView style={styles.modalContainer}>
       {/* Button for signing in or signing up with email */}
-      <TouchableOpacity style={styles.modalBtn}>
+      <TouchableOpacity
+        style={styles.modalBtn}
+        onPress={() =>
+          authType === ModalType.Login
+            ? router.push("/loginMail")
+            : router.push("/signUpMail")
+        }
+      >
         <Ionicons name="mail-outline" size={24} color="black" />
         <Text style={styles.btnText}>
           {authType === ModalType.Login

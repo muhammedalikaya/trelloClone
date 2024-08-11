@@ -9,7 +9,8 @@ import { ClerkProvider, ClerkLoaded, useAuth } from "@clerk/clerk-expo";
 import * as SecureStore from "expo-secure-store";
 import { SupabaseProvider } from "@/context/SupabaseContext";
 import { Colors } from "@/constants/Colors";
-import { ActivityIndicator, View } from "react-native";
+import { ActivityIndicator, Text, TouchableOpacity, View } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 
 // kullanicinin jwt tokenini saklamak icin kullanilan cache
 const tokenCache = {
@@ -69,6 +70,30 @@ const InitialLayout = () => {
     <SupabaseProvider>
       <Stack>
         <Stack.Screen name="index" options={{ headerShown: false }} />
+        <Stack.Screen
+          name="loginMail"
+          options={{
+            headerTitle: () => (
+              <Text style={{ fontSize: 20, fontWeight: "bold", color: "#333" }}>
+                E-posta ile Oturum Açın
+              </Text>
+            ),
+            headerStyle: { backgroundColor: Colors.fontLight },
+            headerShadowVisible: false,
+          }}
+        />
+        <Stack.Screen
+          name="signUpMail"
+          options={{
+            headerTitle: () => (
+              <Text style={{ fontSize: 20, fontWeight: "bold", color: "#333" }}>
+                E-posta ile Kaydolun
+              </Text>
+            ),
+            headerStyle: { backgroundColor: Colors.fontLight },
+            headerShadowVisible: false,
+          }}
+        />
         <Stack.Screen name="(authenticated)" options={{ headerShown: false }} />
       </Stack>
     </SupabaseProvider>

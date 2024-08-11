@@ -23,23 +23,22 @@ export default function Index() {
   const { showActionSheetWithOptions } = useActionSheet();
 
   const openActionSheet = async () => {
-    const data = await getBoards!();
-    // const options = [
-    //   "Destek dökümanlarını görüntüleyin",
-    //   "Destek ekibiyle iletişim kurun",
-    //   "İptal",
-    // ];
-    // const cancelButtonIndex = 2;
-    // showActionSheetWithOptions(
-    //   {
-    //     options,
-    //     cancelButtonIndex,
-    //     title: "Giriş yapamıyor musunuz?",
-    //   },
-    //   (selectedIndex: any) => {
-    //     console.log(selectedIndex);
-    //   }
-    // );
+    const options = [
+      "Destek dökümanlarını görüntüleyin",
+      "Destek ekibiyle iletişim kurun",
+      "İptal",
+    ];
+    const cancelButtonIndex = 2;
+    showActionSheetWithOptions(
+      {
+        options,
+        cancelButtonIndex,
+        title: "Giriş yapamıyor musunuz?",
+      },
+      (selectedIndex: any) => {
+        console.log(selectedIndex);
+      }
+    );
   };
 
   // Bottom sheet modal
@@ -47,8 +46,6 @@ export default function Index() {
 
   // Modal type state
   const [authType, setAuthType] = useState<ModalType | null>(null);
-
-  const { getBoards } = useSupabase();
 
   const showModal = async (type: ModalType) => {
     setAuthType(type);

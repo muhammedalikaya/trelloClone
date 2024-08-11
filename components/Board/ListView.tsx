@@ -125,7 +125,7 @@ const ListView = ({ taskList, onDelete }: ListViewProps) => {
       setNewTask("");
     }
     // Unnecessary when using realtime updates
-    // setTasks([...tasks, data]);
+    setTasks([...tasks, data]);
   };
 
   const onTaskDropped = async (params: DragEndParams<Task>) => {
