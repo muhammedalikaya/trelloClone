@@ -1,6 +1,14 @@
 import { useSupabase } from "@/context/SupabaseContext";
 import { Stack, useLocalSearchParams, useRouter } from "expo-router";
-import { View, Text, FlatList, Image, TouchableOpacity } from "react-native";
+import {
+  View,
+  Text,
+  FlatList,
+  Image,
+  TouchableOpacity,
+  Platform,
+  Keyboard,
+} from "react-native";
 import { useState } from "react";
 import { DefaultTheme } from "@react-navigation/native";
 import { User } from "@/types/enums";
@@ -16,6 +24,7 @@ const Page = () => {
   const headerHeight = useHeaderHeight();
 
   const onSearchUSer = async () => {
+    Keyboard.dismiss();
     const data = await findUsers!(search);
     setUserList(data);
   };
@@ -41,6 +50,7 @@ const Page = () => {
             placeholder: "Invite by name, username or email",
             cancelButtonText: "Done",
             onChangeText: (e) => setSearch(e.nativeEvent.text),
+            onSearchButtonPress: onSearchUSer,
             onCancelButtonPress: onSearchUSer,
           },
         }}
@@ -51,7 +61,9 @@ const Page = () => {
         renderItem={(item) => (
           <UserListItem onPress={onAddUser} element={item} />
         )}
-        style={{ marginTop: 60 + headerHeight }}
+        style={{
+          ...(Platform.OS === "ios" && { marginTop: 60 + headerHeight }),
+        }}
         contentContainerStyle={{ gap: 8 }}
       />
     </View>

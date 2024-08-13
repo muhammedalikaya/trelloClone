@@ -1,18 +1,18 @@
-import {
-  FlatList,
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from "react-native";
-import React, { useEffect, useState } from "react";
-import { Href, Link, useLocalSearchParams, useRouter } from "expo-router";
-import { useSupabase } from "@/context/SupabaseContext";
+import UserListItem from "@/components/UserListItem";
 import { Colors } from "@/constants/Colors";
+import { useSupabase } from "@/context/SupabaseContext";
 import { Board, User } from "@/types/enums";
 import { Ionicons } from "@expo/vector-icons";
-import UserListItem from "@/components/UserListItem";
+import { Href, Link, useLocalSearchParams, useRouter } from "expo-router";
+import { useEffect, useState } from "react";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  FlatList,
+} from "react-native";
+import { TextInput } from "react-native-gesture-handler";
 
 const Page = () => {
   const { id } = useLocalSearchParams<{ id?: string }>();
@@ -20,7 +20,7 @@ const Page = () => {
     useSupabase();
   const router = useRouter();
   const [board, setBoard] = useState<Board>();
-  const [members, setMembers] = useState<User[]>([]);
+  const [member, setMember] = useState<User[]>();
 
   useEffect(() => {
     if (!id) return;
@@ -28,20 +28,23 @@ const Page = () => {
   }, [id]);
 
   const loadInfo = async () => {
-    const data = await getBoardInfo!(id!);
+    if (!id) return;
+
+    const data = await getBoardInfo!(id);
     setBoard(data);
 
-    const member = await getBoardMember!(id!);
+    const member = await getBoardMember!(id);
+    setMember(member);
+  };
 
-    setMembers(member);
-  };
-  const onUpdateBoard = async () => {
-    const updated = await updateBoard!(board!);
-    setBoard(updated);
-  };
   const onDelete = async () => {
     await deleteBoard!(`${id}`);
     router.dismissAll();
+  };
+
+  const onUpdateBoard = async () => {
+    const updated = await updateBoard!(board!);
+    setBoard(updated);
   };
 
   return (
@@ -73,34 +76,26 @@ const Page = () => {
         </View>
 
         <FlatList
-          data={members}
+          data={member}
           keyExtractor={(item) => `${item.id}`}
           renderItem={(item) => (
-            <UserListItem
-              onPress={() => {
-                console.log("userID :", item.item.id);
-              }}
-              element={item}
-            />
+            <UserListItem onPress={() => {}} element={item} />
           )}
           contentContainerStyle={{ gap: 8 }}
           style={{ marginVertical: 12 }}
         />
 
-        <Link
-          href={`/(authenticated)/board/invite?id=${id}` as Href<string>}
-          asChild
-        >
+        <Link href={`/(authenticated)/board/invite?id=${id}` as Href} asChild>
           <TouchableOpacity style={styles.fullBtn}>
             <Text style={{ fontSize: 16, color: Colors.fontLight }}>
-              Manage board members
+              Invite...
             </Text>
           </TouchableOpacity>
         </Link>
       </View>
 
       <TouchableOpacity onPress={onDelete} style={styles.deleteBtn}>
-        <Text style={{ color: "red" }}>Delete Board</Text>
+        <Text>Close Board</Text>
       </TouchableOpacity>
     </View>
   );
@@ -108,43 +103,26 @@ const Page = () => {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "#F5F5F5",
+    backgroundColor: "#fff",
     padding: 8,
     paddingHorizontal: 16,
     marginVertical: 16,
-    borderRadius: 8,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 2,
   },
   deleteBtn: {
-    backgroundColor: "#f3f3f3",
-    padding: 12,
+    backgroundColor: "#fff",
+    padding: 8,
     marginHorizontal: 16,
-    borderRadius: 8,
+    borderRadius: 6,
     alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.1,
-    shadowRadius: 3,
-    elevation: 1,
   },
   fullBtn: {
     backgroundColor: Colors.primary,
-    padding: 12,
+    padding: 8,
     marginLeft: 32,
     marginRight: 16,
     marginTop: 8,
-    borderRadius: 8,
+    borderRadius: 6,
     alignItems: "center",
-    shadowColor: Colors.primary,
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 4,
-    elevation: 3,
   },
 });
-
 export default Page;

@@ -26,7 +26,6 @@ import * as ImagePicker from "expo-image-picker";
 import * as FileSystem from "expo-file-system";
 import { useAuth } from "@clerk/clerk-expo";
 import ListItem from "@/components/Board/ListItem";
-import { RealtimePostgresChangesPayload } from "@supabase/supabase-js";
 
 export interface ListViewProps {
   taskList: TaskList;
@@ -40,7 +39,6 @@ const ListView = ({ taskList, onDelete }: ListViewProps) => {
     updateCard,
     deleteBoardList,
     updateBoardList,
-    getRealtimeCardSubscription,
     uploadFile,
   } = useSupabase();
   const [isAdding, setIsAdding] = useState(false);
@@ -55,48 +53,7 @@ const ListView = ({ taskList, onDelete }: ListViewProps) => {
 
   useEffect(() => {
     loadListTasks();
-    const subscription = getRealtimeCardSubscription!(
-      taskList.id,
-      handleRealtimeChanges
-    );
-    return () => {
-      subscription.unsubscribe();
-    };
   }, [taskList.id]);
-
-  const handleRealtimeChanges = (
-    update: RealtimePostgresChangesPayload<any>
-  ) => {
-    console.log("REALTIME UPDATE:", update);
-    const record = update.new?.id ? update.new : update.old;
-    const event = update.eventType;
-
-    if (!record) return;
-
-    if (event === "INSERT") {
-      setTasks((prev) => {
-        return [...prev, record];
-      });
-    } else if (event === "UPDATE") {
-      setTasks((prev) => {
-        return prev
-          .map((task) => {
-            if (task.id === record.id) {
-              return record;
-            }
-            return task;
-          })
-          .filter((task) => !task.done)
-          .sort((a, b) => a.position - b.position);
-      });
-    } else if (event === "DELETE") {
-      setTasks((prev) => {
-        return prev.filter((task) => task.id !== record.id);
-      });
-    } else {
-      console.log("Unhandled event", event);
-    }
-  };
 
   const loadListTasks = async () => {
     const data = await getListCards!(taskList.id);
@@ -106,7 +63,7 @@ const ListView = ({ taskList, onDelete }: ListViewProps) => {
   const onDeleteList = async () => {
     await deleteBoardList!(taskList.id);
     bottomSheetModalRef.current?.close();
-    onDelete;
+    onDelete();
   };
 
   const onUpdateTaskList = async () => {
