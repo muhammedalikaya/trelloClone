@@ -1,17 +1,17 @@
-# React Native Trello Klonu (Clerk & Supabase ile)
+# React Native Trello Klonu (Clerk & Supabase)
 
 Bu proje, kullanıcı kimlik doğrulaması için **Clerk**, tüm backend mantığı için **Supabase** kullanan bir React Native Trello klonudur.
 
 ## Ekstra Özellikler:
 
 - [x] **Expo Router** dosya tabanlı navigasyon
-- [x] **Supabase Storage** ile dosya depolama
-- [x] **Zeego** ile yerel menüler
+- [x] **Supabase Storage**  dosya depolama
+- [x] **Zeego** yerel menüler
 - [x] **Bottom Sheet** bileşeni için alt sayfa (bottom sheet) bileşeni
-- [x] **Reanimated Carousel** ile karusel bileşeni
-- [x] **Draggable Flatlist** ile sürükle-bırak listeler
-- [ ] **Supabase Edge Functions** ile push bildirimleri
-- [ ] **Supabase Realtime** ile gerçek zamanlı veritabanı güncellemeleri
+- [x] **Reanimated Carousel** karusel bileşeni
+- [x] **Draggable Flatlist** sürükle-bırak listeler
+- [ ] **Supabase Edge Functions** push bildirimleri
+- [ ] **Supabase Realtime** gerçek zamanlı veritabanı güncellemeleri
 
 ## Kurulum
 
