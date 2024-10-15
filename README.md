@@ -1,50 +1,62 @@
-# Welcome to your Expo app 👋
+# React Native Trello Klonu (Clerk & Supabase ile)
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+Bu proje, kullanıcı kimlik doğrulaması için **Clerk**, tüm backend mantığı için **Supabase** kullanan bir React Native Trello klonudur.
 
-## Get started
+## Ekstra Özellikler:
 
-1. Install dependencies
+- [x] **Expo Router** dosya tabanlı navigasyon
+- [x] **Supabase Storage** ile dosya depolama
+- [x] **Zeego** ile yerel menüler
+- [x] **Bottom Sheet** bileşeni için alt sayfa (bottom sheet) bileşeni
+- [x] **Reanimated Carousel** ile karusel bileşeni
+- [x] **Draggable Flatlist** ile sürükle-bırak listeler
+- [ ] **Supabase Edge Functions** ile push bildirimleri
+- [ ] **Supabase Realtime** ile gerçek zamanlı veritabanı güncellemeleri
+
+## Kurulum
+
+Proje local kurulum için aşağıdaki adımları takip edebilirsiniz:
+
+1. **Depoyu klonlayın:**
+
+   ```bash
+   git clone https://github.com/muhammedalikaya/trelloClone
+   cd trelloClone
+   ```
+
+2. **Bağımlılıkları yükleyin:**
 
    ```bash
    npm install
+   npx expo install
    ```
 
-2. Start the app
+3. **Clerk ve Supabase ayarlarını yapılandırın:**
 
+   - Clerk ve Supabase hesaplarınızı oluşturun.
+   - Supabase URL'si, Anahtarlar ve Clerk API anahtarlarını `.env` dosyanıza ekleyin.
+
+4. **Uygulamayı başlatın:**
    ```bash
-    npx expo start
+   npx expo run:ios
    ```
 
-In the output, you'll find options to open the app in a
+## Kullanılan Teknolojiler
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+- **React Native:** Mobil uygulamalar için ana çerçeve.
+- **Clerk:** Kullanıcı kimlik doğrulama ve yönetimi.
+- **Supabase:** Backend hizmeti, veritabanı ve dosya depolama.
+- **Expo:** React Native uygulamaları için geliştirme platformu.
+- **Reanimated:** Animasyonlar için gelişmiş kütüphane.
+- **Zeego:** Native menüler için eklenti.
+- **Bottom Sheet:** Alt sayfa bileşeni için.
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+## Katkıda Bulunma
 
-## Get a fresh project
+Projeye katkıda bulunmak isterseniz aşağıdaki adımları takip edin:
 
-When you're ready, run:
-
-```bash
-npm run reset-project
-```
-
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
-
-## Learn more
-
-To learn more about developing your project with Expo, look at the following resources:
-
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+1. Depoyu fork'layın
+2. Yeni bir dal oluşturun (`git checkout -b yeni-ozellik`)
+3. Değişikliklerinizi commit'leyin (`git commit -m 'Yeni özellik ekle'`)
+4. Dalınızı push'layın (`git push origin yeni-ozellik`)
+5. Bir **Pull Request** açın
